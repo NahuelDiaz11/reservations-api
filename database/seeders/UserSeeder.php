@@ -11,11 +11,13 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        $hashedPassword = Hash::make('123456');
+
         // admin
         User::create([
             'name' => 'Administrator',
             'email' => 'admin@reservations.com',
-            'password' => Hash::make('password'),
+            'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::ADMIN)->first()->id,
         ]);
 
@@ -23,7 +25,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Project Coordinator',
             'email' => 'coordinator@reservations.com',
-            'password' => Hash::make('password'),
+            'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::COORDINATOR)->first()->id,
         ]);
 
@@ -31,7 +33,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Field Technician',
             'email' => 'technician@reservations.com',
-            'password' => Hash::make('password'),
+            'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::TECHNICIAN)->first()->id,
         ]);
 
@@ -39,7 +41,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Sales Agent',
             'email' => 'seller@reservations.com',
-            'password' => Hash::make('password'),
+            'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::SELLER)->first()->id,
         ]);
 
@@ -47,7 +49,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Regular User',
             'email' => 'user@reservations.com',
-            'password' => Hash::make('password'),
+            'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::SELLER)->first()->id,
         ]);
     }

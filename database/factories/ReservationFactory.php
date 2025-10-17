@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\ReservationState;
 use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ReservationFactory extends Factory
@@ -14,11 +15,11 @@ class ReservationFactory extends Factory
     {
         return [
             'name' => $this->faker->words(3, true),
-            'created_by' => $this->faker->userName,
+            'created_by' => User::inRandomOrder()->first()?->id ?? 1,
             'address' => $this->faker->address,
             'lat' => $this->faker->latitude(-90, 90),
             'lng' => $this->faker->longitude(-180, 180),
-            'state' => ReservationState::RESERVED,
+            'state' => $this->faker->randomElement(ReservationState::cases()),
         ];
     }
 }
