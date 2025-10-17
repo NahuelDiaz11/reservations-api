@@ -6,6 +6,17 @@ use App\Enums\ReservationState;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreReservationRequest",
+ *     required={"name", "address", "lat", "lng"},
+ *     @OA\Property(property="name", type="string", maxLength=255, example="Reserva Ejemplo"),
+ *     @OA\Property(property="address", type="string", maxLength=500, example="Calle Falsa 123"),
+ *     @OA\Property(property="lat", type="number", format="float", minimum=-90, maximum=90, example=-34.603722),
+ *     @OA\Property(property="lng", type="number", format="float", minimum=-180, maximum=180, example=-58.381592),
+ *     @OA\Property(property="state", type="string", enum={"RESERVED", "SCHEDULED", "INSTALLED", "UNINSTALLED", "CANCELED"}, example="RESERVED")
+ * )
+ */
 class StoreReservationRequest extends FormRequest
 {
     public function authorize(): bool

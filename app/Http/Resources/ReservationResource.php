@@ -6,6 +6,29 @@ use App\Enums\ReservationState;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *     schema="ReservationResource",
+ *     type="object",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Reserva Ejemplo"),
+ *     @OA\Property(property="address", type="string", example="Calle Falsa 123"),
+ *     @OA\Property(property="lat", type="number", format="float", example=-34.603722),
+ *     @OA\Property(property="lng", type="number", format="float", example=-58.381592),
+ *     @OA\Property(property="state", type="string", example="RESERVED"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time"),
+ *     @OA\Property(property="user", type="object",
+ *         @OA\Property(property="id", type="integer"),
+ *         @OA\Property(property="name", type="string"),
+ *         @OA\Property(property="email", type="string"),
+ *         @OA\Property(property="role", type="object",
+ *             @OA\Property(property="id", type="integer"),
+ *             @OA\Property(property="name", type="string")
+ *         )
+ *     )
+ * )
+ */
 class ReservationResource extends JsonResource
 {
     public function toArray(Request $request): array

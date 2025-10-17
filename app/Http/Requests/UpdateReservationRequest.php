@@ -7,6 +7,15 @@ use App\Models\Reservation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdateReservationRequest",
+ *     @OA\Property(property="name", type="string", maxLength=255, example="Reserva Actualizada"),
+ *     @OA\Property(property="address", type="string", maxLength=500, example="Nueva Dirección 456"),
+ *     @OA\Property(property="lat", type="number", format="float", minimum=-90, maximum=90, example=-34.603722),
+ *     @OA\Property(property="lng", type="number", format="float", minimum=-180, maximum=180, example=-58.381592)
+ * )
+ */
 class UpdateReservationRequest extends FormRequest
 {
     public function authorize(): bool
