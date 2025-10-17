@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ReservationController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas de autenticación
@@ -11,5 +12,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
-    
+
+    Route::prefix('reservations')->group(function () {
+    Route::post('/', [ReservationController::class, 'store'])
+        ->name('reservations.store');
+
+    });
 });
