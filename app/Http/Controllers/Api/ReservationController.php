@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
+use App\Http\Requests\UpdateReservationRequest;
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use App\Services\ReservationQueryService;
@@ -111,6 +112,40 @@ class ReservationController extends Controller
 
             return response()->json([
                 'message' => 'Error al obtener la reserva',
+                'error' => config('app.debug') ? $e->getMessage() : 'Ocurrió un error inesperado.',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Actualizar reserva
+     */
+    public function update(UpdateReservationRequest $request, Reservation $reservation): JsonResponse
+    {
+        try {
+            $validated = $request->validated();
+
+            if (isset($validated['state'])) {
+                unset($validated['state']);
+            }
+
+            $reservation->update($validated);
+
+            return response()->json([
+                'message' => 'Reserva actualizada exitosamente',
+                'data' => new ReservationResource($reservation->fresh()->load(['user', 'user.role'])),
+            ], Response::HTTP_OK);
+        } catch (\Throwable $e) {
+            Log::error('Error al actualizar la reserva', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'reservation_id' => $reservation->id ?? null,
+                'user_id' => $request->user()->id ?? null,
+                'payload' => $request->all(),
+            ]);
+
+            return response()->json([
+                'message' => 'Error al actualizar la reserva',
                 'error' => config('app.debug') ? $e->getMessage() : 'Ocurrió un error inesperado.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
