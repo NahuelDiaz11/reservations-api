@@ -38,47 +38,49 @@ class ReservationPolicy
     /**
      * Determina si el usuario puede actualizar la reserva
      */
-    public function update(User $user, Reservation $reservation): bool
+    public function update(User $user, Reservation $reservation): Response
     {
-        // solo admin, coordinator o el creador pueden modificar (si no está en estado final)
         if ($reservation->isFinalState()) {
-            return false;
+            return Response::deny('No se puede modificar una reserva en estado final: ' . $reservation->state->value);
         }
 
-        return $user->canManageAllReservations() || $reservation->created_by === $user->id;
+        if (!($user->canManageAllReservations() || $reservation->created_by === $user->id)) {
+            return Response::deny('No tiene permisos para modificar esta reserva.');
+        }
+
+        return Response::allow();
     }
 
     /**
      * Determina si el usuario puede cambiar el estado
      */
-    public function changeState(User $user, Reservation $reservation, ReservationState $newState): bool
+    public function changeState(User $user, Reservation $reservation, ReservationState $newState): Response
     {
         // no se puede modificar estados finales
         if ($reservation->isFinalState()) {
-            return false;
+            return Response::deny('No se puede modificar una reserva en estado final: ' . $reservation->state->value);
         }
 
         // verificar transición válida
         if (!$reservation->canTransitionTo($newState)) {
-            return false;
+            return Response::deny('Transición de estado no válida: ' . $reservation->state->value . ' → ' . $newState->value);
         }
 
         // verificar permisos basados en el estado destino y el rol
-        return match ($newState) {
+        $hasPermission = match ($newState) {
             ReservationState::SCHEDULED => $user->canChangeToScheduled(),
             ReservationState::INSTALLED => $user->canChangeToInstalled(),
             ReservationState::UNINSTALLED => $user->canChangeToUninstalled(),
             ReservationState::CANCELED => $user->canChangeToCanceled(),
             default => false,
         };
+
+         if (!$hasPermission) {
+            $roleName = $user->role->name;
+            return Response::deny("Su rol {$roleName} no tiene permisos para cambiar al estado {$newState->value}");
+        }
+
+        return Response::allow();
     }
 
-    /**
-     * Determina si el usuario puede eliminar la reserva
-     */
-    public function delete(User $user, Reservation $reservation): bool
-    {
-        // solo admin puede eliminar, y solo si no está en estado final
-        return $user->isAdmin() && !$reservation->isFinalState();
-    }
 }

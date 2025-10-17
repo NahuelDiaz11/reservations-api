@@ -11,7 +11,8 @@ class UpdateReservationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('reservation'));
+
+        return true;
     }
 
     public function rules(): array

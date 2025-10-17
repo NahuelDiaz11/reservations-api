@@ -14,13 +14,21 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
 
     Route::prefix('reservations')->group(function () {
+
+        Route::get('/', [ReservationController::class, 'index'])
+            ->name('reservations.index');
+
         Route::post('/', [ReservationController::class, 'store'])
             ->name('reservations.store');
 
         Route::get('/{reservation}', [ReservationController::class, 'show'])
             ->name('reservations.show');
-    });
 
-    Route::patch('/{reservation}/state', [ReservationController::class, 'changeState'])
-        ->name('reservations.state.update');
+        Route::put('/{reservation}', [ReservationController::class, 'update'])
+            ->name('reservations.update');
+            
+        Route::patch('/{reservation}/state', [ReservationController::class, 'changeState'])
+            ->name('reservations.state.update');
+
+    });
 });
