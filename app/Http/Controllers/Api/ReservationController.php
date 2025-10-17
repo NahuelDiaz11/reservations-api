@@ -10,6 +10,7 @@ use App\Services\ReservationQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
@@ -23,6 +24,37 @@ class ReservationController extends Controller
         $this->authorizeResource(Reservation::class, 'reservation');
     }
 
+    /**
+     * Lista reservas
+     */
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $canViewAll = $request->user()->canManageAllReservations();
+            $user = $canViewAll ? null : $request->user();
+
+            $query = $this->queryService->buildQuery($request);
+            $reservations = $this->queryService->paginateResults($query, $request);
+            $metadata = $this->queryService->getFiltersMetadata($request, $reservations);
+
+            return response()->json([
+                'data' => ReservationResource::collection($reservations),
+                'meta' => $metadata,
+            ], Response::HTTP_OK);
+        } catch (\Throwable $e) {
+            Log::error('Error al listar reservas', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $request->user()->id ?? null,
+                'filters' => $request->all(),
+            ]);
+
+            return response()->json([
+                'message' => 'Error al obtener la lista de reservas',
+                'error' => config('app.debug') ? $e->getMessage() : 'Ocurrió un error inesperado.',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * Crear nueva reserva
