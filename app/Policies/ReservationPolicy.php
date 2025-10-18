@@ -44,9 +44,9 @@ class ReservationPolicy
             return Response::deny('No se puede modificar una reserva en estado final: ' . $reservation->state->value);
         }
 
-        if (!($user->canManageAllReservations() || $reservation->created_by === $user->id)) {
-            return Response::deny('No tiene permisos para modificar esta reserva.');
-        }
+        // if (!($user->canManageAllReservations() || $reservation->created_by === $user->id)) {
+        //     return Response::deny('No tiene permisos para modificar esta reserva.');
+        // }
 
         return Response::allow();
     }
