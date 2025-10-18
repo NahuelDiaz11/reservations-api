@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         // admin
         User::create([
             'name' => 'Administrator',
-            'email' => 'admin@reservations.com',
+            'email' => 'admin@cornerstone.com',
             'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::ADMIN)->first()->id,
         ]);
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         // coordinator
         User::create([
             'name' => 'Project Coordinator',
-            'email' => 'coordinator@reservations.com',
+            'email' => 'coordinator@cornerstone.com',
             'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::COORDINATOR)->first()->id,
         ]);
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         // technician
         User::create([
             'name' => 'Field Technician',
-            'email' => 'technician@reservations.com',
+            'email' => 'technician@cornerstone.com',
             'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::TECHNICIAN)->first()->id,
         ]);
@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
         // seller
         User::create([
             'name' => 'Sales Agent',
-            'email' => 'seller@reservations.com',
+            'email' => 'seller@cornerstone.com',
             'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::SELLER)->first()->id,
         ]);
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
         // usuario adicional para testing
         User::create([
             'name' => 'Regular User',
-            'email' => 'user@reservations.com',
+            'email' => 'user@cornerstone.com',
             'password' => $hashedPassword,
             'role_id' => Role::where('name', Role::SELLER)->first()->id,
         ]);
