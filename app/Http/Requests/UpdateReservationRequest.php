@@ -32,24 +32,8 @@ class UpdateReservationRequest extends FormRequest
             'name' => 'sometimes|required|string|max:255',
             'address' => 'sometimes|required|string|max:500',
             'lat' => 'sometimes|required|numeric|between:-90,90',
-            'lng' => 'sometimes|required|numeric|between:-180,180',
-            'state' => [
-                'sometimes',
-                'string',
-                Rule::in(ReservationState::values()),
-                function ($attribute, $value, $fail) use ($reservation) {
-                    $newState = ReservationState::from($value);
-
-                    if ($reservation->isFinalState()) {
-                        $fail('No se puede modificar una reserva en estado final: ' . $reservation->state->value);
-                        return;
-                    }
-
-                    if (!$reservation->canTransitionTo($newState)) {
-                        $fail('Transición de estado no válida: ' . $reservation->state->value . ' → ' . $value);
-                    }
-                },
-            ],
+            'lng' => 'sometimes|required|numeric|between:-180,180'
+          
         ];
     }
 
@@ -62,7 +46,6 @@ class UpdateReservationRequest extends FormRequest
             'lat.between' => 'La latitud debe estar entre -90 y 90',
             'lng.required' => 'La longitud es obligatoria',
             'lng.between' => 'La longitud debe estar entre -180 y 180',
-            'state.in' => 'El estado proporcionado no es válido',
         ];
     }
 }
